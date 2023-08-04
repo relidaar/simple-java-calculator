@@ -36,75 +36,14 @@ public final class Parser {
 
 			if (blankCharacters.contains(currentSymbol)) {
 			} else if (Character.isDigit(currentSymbol)) {
-				parseNumber(currentSymbol, scanner, tokens);
+				tokens.add(NumberParser.parse(scanner));
 			} else if (supportedOperators.contains(currentSymbol)) {
-				tokens.add(new Token(TokenType.OPERATOR, String.valueOf(currentSymbol)));
+				tokens.add(OperatorParser.parse(scanner));
 			} else {
 				throw new InvalidInputException(scanner.getCurrentPosition(), currentSymbol);
 			}
-
 		}
+		
 		return tokens;
 	}
-
-	private static void parseNumber(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
-		var buffer = new StringBuffer();
-		buffer.append(currentSymbol);
-
-		while (scanner.hasNext()) {
-			currentSymbol = scanner.peakNext();
-			if (currentSymbol == '.') {
-				scanner.next();
-				buffer.append(loadDecimalPart(currentSymbol, scanner, tokens));
-				break;
-			}
-			if (currentSymbol == 'e') {
-				scanner.next();
-				buffer.append(loadExponent(currentSymbol, scanner, tokens));
-				break;
-			}
-			if (!Character.isDigit(currentSymbol))
-				break;
-			scanner.next();
-			buffer.append(currentSymbol);
-		}
-
-		tokens.add(new Token(TokenType.NUMBER, buffer.toString()));
-	}
-	
-	private static StringBuffer loadDecimalPart(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
-		StringBuffer result = new StringBuffer();
-		result.append(currentSymbol);
-		while (scanner.hasNext()) {
-			currentSymbol = scanner.peakNext();
-			if (currentSymbol == 'e') {
-				scanner.next();
-				result.append(loadExponent(currentSymbol, scanner, tokens));
-				break;
-			}
-			if (!Character.isDigit(currentSymbol))
-				break;
-			scanner.next();
-			result.append(currentSymbol);
-		}
-		
-		return result;
-	}
-	
-	private static StringBuffer loadExponent(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
-		StringBuffer result = new StringBuffer();
-		result.append(currentSymbol);
-		if (!Character.isDigit(scanner.peakNext()))
-			throw new Exception("Exponent must be definied with a number");
-		while (scanner.hasNext()) {
-			currentSymbol = scanner.peakNext();
-			if (!Character.isDigit(currentSymbol))
-				break;
-			scanner.next();
-			result.append(currentSymbol);
-		}
-		
-		return result;
-	}
-	
 }

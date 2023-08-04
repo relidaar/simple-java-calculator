@@ -5,10 +5,11 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-			var tokens = Parser.parse("4.5 + 3.2");
-			var expresion = Interpreter.parse(tokens);
+			String input = "";
+			var tokens = Parser.parse(input);
+			var expresion = Interpreter.buildAST(tokens);
 			var result = expresion.evaluate();
-			System.out.println(result);
+			System.out.format("%s = %s", input, result);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

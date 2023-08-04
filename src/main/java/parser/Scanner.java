@@ -8,23 +8,23 @@ class Scanner {
 		if (input == null) {
 			throw new NullPointerException();
 		}
-		
+
 		mInput = input;
 	}
 
 	public boolean hasNext() {
 		return mCurrentPosition + 1 < mInput.length();
 	}
-	
+
 	public char next() {
 		if (!hasNext()) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		mCurrentPosition += 1;
 		return mInput.charAt(mCurrentPosition);
 	}
-	
+
 	public char peakNext() {
 		if (!hasNext()) {
 			throw new IndexOutOfBoundsException();
@@ -34,5 +34,9 @@ class Scanner {
 
 	public int getCurrentPosition() {
 		return mCurrentPosition;
+	}
+
+	public char getCurrentElement() {
+		return mInput.charAt(mCurrentPosition);
 	}
 }

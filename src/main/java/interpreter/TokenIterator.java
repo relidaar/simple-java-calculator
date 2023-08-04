@@ -13,7 +13,11 @@ public class TokenIterator {
 	}
 	
 	public boolean hasNext() {
-		return mCurrentPosition + 1 < mTokens.size();
+		return hasAt(mCurrentPosition + 1);
+	}
+	
+	public boolean hasAt(int position) {
+		return position < mTokens.size();
 	}
 	
 	public Token next() {
@@ -35,5 +39,8 @@ public class TokenIterator {
 	public int getCurrentPosition() {
 		return mCurrentPosition;
 	}
-	
+
+	public Token getCurrentToken() {
+		return mTokens.get(mCurrentPosition);
+	}
 }
