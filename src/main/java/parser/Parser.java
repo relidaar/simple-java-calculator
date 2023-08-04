@@ -6,12 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Parser {
+public final class Parser {
 
-	private Set<Character> supportedOperators;
-	private Set<Character> blankCharacters;
+	private static Set<Character> supportedOperators;
+	private static Set<Character> blankCharacters;
+	
+	private Parser() {}
 
-	public Parser() {
+	static {
 		supportedOperators = new HashSet<>();
 		supportedOperators.add('+');
 		supportedOperators.add('-');
@@ -19,10 +21,10 @@ public class Parser {
 		blankCharacters = new HashSet<>();
 		blankCharacters.add(' ');
 		blankCharacters.add('\t');
-		blankCharacters.add('\n');
+		blankCharacters.add('\n');	
 	}
 
-	public List<Token> parse(String input) throws InvalidInputException {
+	public static List<Token> parse(String input) throws Exception {
 		if (input == null || input.isBlank()) {
 			return Collections.emptyList();
 		}
@@ -45,12 +47,22 @@ public class Parser {
 		return tokens;
 	}
 
-	private void parseNumber(char currentSymbol, Scanner scanner, List<Token> tokens) {
+	private static void parseNumber(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
 		var buffer = new StringBuffer();
 		buffer.append(currentSymbol);
 
 		while (scanner.hasNext()) {
 			currentSymbol = scanner.peakNext();
+			if (currentSymbol == '.') {
+				scanner.next();
+				buffer.append(loadDecimalPart(currentSymbol, scanner, tokens));
+				break;
+			}
+			if (currentSymbol == 'e') {
+				scanner.next();
+				buffer.append(loadExponent(currentSymbol, scanner, tokens));
+				break;
+			}
 			if (!Character.isDigit(currentSymbol))
 				break;
 			scanner.next();
@@ -59,4 +71,40 @@ public class Parser {
 
 		tokens.add(new Token(TokenType.NUMBER, buffer.toString()));
 	}
+	
+	private static StringBuffer loadDecimalPart(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
+		StringBuffer result = new StringBuffer();
+		result.append(currentSymbol);
+		while (scanner.hasNext()) {
+			currentSymbol = scanner.peakNext();
+			if (currentSymbol == 'e') {
+				scanner.next();
+				result.append(loadExponent(currentSymbol, scanner, tokens));
+				break;
+			}
+			if (!Character.isDigit(currentSymbol))
+				break;
+			scanner.next();
+			result.append(currentSymbol);
+		}
+		
+		return result;
+	}
+	
+	private static StringBuffer loadExponent(char currentSymbol, Scanner scanner, List<Token> tokens) throws Exception {
+		StringBuffer result = new StringBuffer();
+		result.append(currentSymbol);
+		if (!Character.isDigit(scanner.peakNext()))
+			throw new Exception("Exponent must be definied with a number");
+		while (scanner.hasNext()) {
+			currentSymbol = scanner.peakNext();
+			if (!Character.isDigit(currentSymbol))
+				break;
+			scanner.next();
+			result.append(currentSymbol);
+		}
+		
+		return result;
+	}
+	
 }

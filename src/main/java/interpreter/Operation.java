@@ -1,18 +1,18 @@
 package interpreter;
 
-public class OperationExpression implements Expression {
+public class Operation implements Expression {
 	private Expression mLeft;
 	private Expression mRight;
 	private OperationType mType;
 	
-	public OperationExpression(Expression left, Expression right, OperationType type) {
+	public Operation(Expression left, Expression right, OperationType type) {
 		mLeft = left;
 		mRight = right;
 		mType = type;
 	}
 
 	@Override
-	public Integer evaluate() {
+	public Double evaluate() {
 		var leftResult = mLeft.evaluate();
 		var rightResult = mRight.evaluate();
 		return switch (mType) {

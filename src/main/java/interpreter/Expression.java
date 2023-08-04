@@ -1,5 +1,5 @@
 package interpreter;
 
 public interface Expression {
-	public Integer evaluate();
+	public Double evaluate();
 }

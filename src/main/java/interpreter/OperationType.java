@@ -6,7 +6,7 @@ import parser.TokenType;
 public enum OperationType {
 	Addition, Subtraction;
 
-	public static OperationType getOperation(Token token) throws Exception {
+	public static OperationType valueOf(Token token) throws Exception {
 		if (token.getType() != TokenType.OPERATOR) {
 			throw new Exception("Invalid token type");
 		}
