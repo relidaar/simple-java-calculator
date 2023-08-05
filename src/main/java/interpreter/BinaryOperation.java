@@ -1,11 +1,11 @@
 package interpreter;
 
-public class Operation implements Expression {
+public class BinaryOperation implements Expression {
 	private Expression mLeft;
 	private Expression mRight;
 	private OperationType mType;
 	
-	public Operation(Expression left, Expression right, OperationType type) {
+	public BinaryOperation(Expression left, Expression right, OperationType type) {
 		mLeft = left;
 		mRight = right;
 		mType = type;
@@ -18,6 +18,8 @@ public class Operation implements Expression {
 		return switch (mType) {
 		case Addition -> leftResult + rightResult;
 		case Subtraction -> leftResult - rightResult;
+		case Division -> leftResult / rightResult;
+		case Multiplication -> leftResult * rightResult;
 		};
 	}
 }

@@ -7,9 +7,12 @@ public class Main {
 		try {
 			String input = "";
 			var tokens = Parser.parse(input);
-			var expresion = Interpreter.buildAST(tokens);
-			var result = expresion.evaluate();
-			System.out.format("%s = %s", input, result);
+			var expression = Interpreter.buildAST(tokens);
+			
+			if (expression != null) {
+				var result = expression.evaluate();
+				System.out.format("%s = %s", input, result);
+			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

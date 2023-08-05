@@ -17,6 +17,8 @@ public final class Parser {
 		supportedOperators = new HashSet<>();
 		supportedOperators.add('+');
 		supportedOperators.add('-');
+		supportedOperators.add('*');
+		supportedOperators.add('/');
 
 		blankCharacters = new HashSet<>();
 		blankCharacters.add(' ');

@@ -1,9 +1,9 @@
 package interpreter;
 
-public class RealNumber implements Expression {
+public class Number implements Expression {
 	private double mValue;
 	
-	public RealNumber(double value) {
+	public Number(double value) {
 		this.mValue = value;
 	}
 
