@@ -1,5 +1,5 @@
 package parser;
 
 public enum TokenType {
-	NUMBER, OPERATOR;
+	NUMBER, BINARY_OPERATOR;
 }

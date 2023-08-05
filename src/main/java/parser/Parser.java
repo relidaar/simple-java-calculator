@@ -19,6 +19,7 @@ public final class Parser {
 		supportedOperators.add('-');
 		supportedOperators.add('*');
 		supportedOperators.add('/');
+		supportedOperators.add('%');
 
 		blankCharacters = new HashSet<>();
 		blankCharacters.add(' ');
@@ -40,7 +41,7 @@ public final class Parser {
 			} else if (Character.isDigit(currentSymbol)) {
 				tokens.add(NumberParser.parse(scanner));
 			} else if (supportedOperators.contains(currentSymbol)) {
-				tokens.add(OperatorParser.parse(scanner));
+				tokens.add(new Token(TokenType.BINARY_OPERATOR, String.valueOf(currentSymbol)));
 			} else {
 				throw new InvalidInputException(scanner.getCurrentPosition(), currentSymbol);
 			}

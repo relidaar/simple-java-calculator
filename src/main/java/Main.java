@@ -7,7 +7,7 @@ public class Main {
 		try {
 			String input = "";
 			var tokens = Parser.parse(input);
-			var expression = Interpreter.buildAST(tokens);
+			var expression = Interpreter.buildExpression(tokens);
 			
 			if (expression != null) {
 				var result = expression.evaluate();

@@ -25,7 +25,7 @@ class Scanner {
 		return mInput.charAt(mCurrentPosition);
 	}
 
-	public char peakNext() {
+	public char peekNext() {
 		if (!hasNext()) {
 			throw new IndexOutOfBoundsException();
 		}

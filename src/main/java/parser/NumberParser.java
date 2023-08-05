@@ -9,7 +9,7 @@ public final class NumberParser {
 		buffer.append(scanner.getCurrentElement());
 
 		while (scanner.hasNext()) {
-			char currentSymbol = scanner.peakNext();
+			char currentSymbol = scanner.peekNext();
 			if (currentSymbol == '.') {
 				scanner.next();
 				buffer.append(loadDecimalPart(scanner));
@@ -38,7 +38,7 @@ public final class NumberParser {
 		result.append(scanner.getCurrentElement());
 		
 		while (scanner.hasNext()) {
-			char currentSymbol = scanner.peakNext();
+			char currentSymbol = scanner.peekNext();
 			if (isExponentSymbol(currentSymbol)) {
 				scanner.next();
 				result.append(loadExponent(scanner));
@@ -59,11 +59,11 @@ public final class NumberParser {
 		StringBuffer result = new StringBuffer();
 		result.append(scanner.getCurrentElement());
 		
-		if (!Character.isDigit(scanner.peakNext()))
+		if (!Character.isDigit(scanner.peekNext()))
 			throw new Exception("Exponent must be definied with a number");
 		
 		while (scanner.hasNext()) {
-			char currentSymbol = scanner.peakNext();
+			char currentSymbol = scanner.peekNext();
 			if (!Character.isDigit(currentSymbol))
 				break;
 			
