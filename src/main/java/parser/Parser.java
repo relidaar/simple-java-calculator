@@ -2,6 +2,7 @@ package parser;
 
 import java.util.List;
 
+import parser.Unary.UnaryType;
 import tokenizer.Token;
 import tokenizer.TokenType;
 
@@ -36,11 +37,11 @@ public final class Parser {
 	}
 
 	private static Expression buildFactor(TokenIterator it) throws InvalidExpressionException {
-		Expression expression = buildPrimary(it);
+		Expression expression = buildUnary(it);
 		Token current = it.current();
 		while (Factor.FactorType.contains(current)) {
 			it.next();
-			Expression next = buildPrimary(it);
+			Expression next = buildUnary(it);
 			expression = new Factor(expression, next, Factor.FactorType.valueOf(current));
 			current = it.current();
 		}
@@ -48,21 +49,31 @@ public final class Parser {
 		return expression;
 	}
 
+	private static Expression buildUnary(TokenIterator it) throws InvalidExpressionException {
+		Token current = it.current();
+		if (isOf(current, TokenType.MINUS, TokenType.PLUS)) {
+			it.next();
+			Expression expression = buildPrimary(it);
+			return new Unary(expression, UnaryType.valueOf(current));
+		}
+		return buildPrimary(it);
+	}
+	
 	private static Expression buildPrimary(TokenIterator it) throws InvalidExpressionException {
 		Token current = it.current();
-		if (current != null && current.getType() == TokenType.NUMBER) {
+		if (isOf(current, TokenType.NUMBER)) {
 			it.next();
 			return new Number(Double.parseDouble(current.getValue()));
 		}
 
-		if (current != null && current.getType() == TokenType.LEFT_PARENTHESIS) {
+		if (isOf(current, TokenType.LEFT_PARENTHESIS)) {
 			it.next();
 			Expression expression = buildTerm(it);
 			if (expression == null)
 				throw new InvalidExpressionException(current);
 
 			current = it.current();
-			if (current != null && current.getType() == TokenType.RIGHT_PARENTHESIS) {
+			if (isOf(current, TokenType.RIGHT_PARENTHESIS)) {
 				it.next();
 				return expression;
 			}
@@ -71,5 +82,13 @@ public final class Parser {
 		}
 
 		throw new InvalidExpressionException(current != null ? current : it.previous());
+	}
+	
+	private static boolean isOf(Token token, TokenType... types) {
+		if (token == null) return false;
+		for (TokenType type : types) {
+			if (token.getType() == type) return true;
+		}
+		return false;
 	}
 }
