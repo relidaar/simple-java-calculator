@@ -33,7 +33,10 @@ public final class Tokenizer {
 				tokens.add(NumberTokenizer.parse(scanner));
 			} else if (TokenType.contains(currentSymbol)) {
 				tokens.add(new Token(TokenType.valueOf(currentSymbol), String.valueOf(currentSymbol), scanner.getCurrentPosition()));
-			} else {
+			} else if (Character.isLetter(currentSymbol) || currentSymbol == '_'){
+				tokens.add(IdentifierTokenizer.parse(scanner));
+			}
+			else {
 				throw new InvalidInputException(scanner.getCurrentPosition(), currentSymbol);
 			}
 		}

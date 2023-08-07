@@ -1,7 +1,7 @@
 package tokenizer;
 
 public enum TokenType {
-	NUMBER, PLUS, MINUS, STAR, SLASH, PERCENT, LEFT_PARENTHESIS, RIGHT_PARENTHESIS;
+	NUMBER, PLUS, MINUS, STAR, SLASH, PERCENT, LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA, IDENTIFIER;
 	
 	public static TokenType valueOf(char symbol) {
 		return switch(symbol) {
@@ -12,6 +12,7 @@ public enum TokenType {
 		case '%' -> PERCENT;
 		case '(' -> LEFT_PARENTHESIS;
 		case ')' -> RIGHT_PARENTHESIS;
+		case ',' -> COMMA;
 		default -> null;
 		};
 	}

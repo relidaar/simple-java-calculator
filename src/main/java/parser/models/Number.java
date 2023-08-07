@@ -1,4 +1,4 @@
-package parser;
+package parser.models;
 
 public class Number implements Expression {
 	private double mValue;

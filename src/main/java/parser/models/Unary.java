@@ -1,4 +1,4 @@
-package parser;
+package parser.models;
 
 import tokenizer.Token;
 import tokenizer.TokenType;
@@ -24,7 +24,7 @@ public class Unary implements Expression {
 	public enum UnaryType {
 		POSITIVE, NEGATIVE;
 
-		static UnaryType valueOf(Token token) {
+		public static UnaryType valueOf(Token token) {
 			TokenType type = token.getType();
 			return switch (type) {
 			case MINUS -> NEGATIVE;

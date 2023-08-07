@@ -1,8 +1,16 @@
 package parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import parser.Unary.UnaryType;
+import parser.models.Expression;
+import parser.models.Factor;
+import parser.models.Function;
+import parser.models.Function.FunctionType;
+import parser.models.Number;
+import parser.models.Term;
+import parser.models.Unary;
+import parser.models.Unary.UnaryType;
 import tokenizer.Token;
 import tokenizer.TokenType;
 
@@ -22,7 +30,7 @@ public final class Parser {
 
 		return expression;
 	}
-
+	
 	private static Expression buildTerm(TokenIterator it) throws InvalidExpressionException {
 		Expression expression = buildFactor(it);
 		Token current = it.current();
@@ -58,7 +66,7 @@ public final class Parser {
 		}
 		return buildPrimary(it);
 	}
-	
+
 	private static Expression buildPrimary(TokenIterator it) throws InvalidExpressionException {
 		Token current = it.current();
 		if (isOf(current, TokenType.NUMBER)) {
@@ -67,27 +75,77 @@ public final class Parser {
 		}
 
 		if (isOf(current, TokenType.LEFT_PARENTHESIS)) {
-			it.next();
+			return buildParenthesizedExpression(it, current);
+		}
+
+		if (Function.FunctionType.contains(current)) {
+			return buildFunction(it, current);
+		}
+
+		throw new InvalidExpressionException(current != null ? current : it.previous());
+	}
+
+	// Helper Functions Section
+	private static Expression buildFunction(TokenIterator it, Token current) throws InvalidExpressionException {
+		FunctionType functionType = FunctionType.valueOf(current);
+				
+		current = it.next();
+		if (isOf(current, TokenType.LEFT_PARENTHESIS) == false) {
+			throw new InvalidExpressionException(current != null ? current : it.previous());
+		}
+		it.next();
+		
+		List<Expression> arguments = new ArrayList<>();
+		for	(int i = 0; i < functionType.getParametersCount() - 1; i++) {
 			Expression expression = buildTerm(it);
 			if (expression == null)
 				throw new InvalidExpressionException(current);
 
 			current = it.current();
-			if (isOf(current, TokenType.RIGHT_PARENTHESIS)) {
-				it.next();
-				return expression;
+			if (isOf(current, TokenType.COMMA) == false) {
+				throw new InvalidExpressionException(current != null ? current : it.previous());
 			}
+			it.next();
+			
+			arguments.add(expression);
+		}
+		
+		Expression expression = buildTerm(it);
+		if (expression == null)
+			throw new InvalidExpressionException(current);
+		arguments.add(expression);
 
+		current = it.current();
+		if (isOf(current, TokenType.RIGHT_PARENTHESIS) == false) {
 			throw new InvalidExpressionException(current != null ? current : it.previous());
 		}
-
-		throw new InvalidExpressionException(current != null ? current : it.previous());
+		
+		it.next();
+		return new Function(functionType, arguments);
 	}
-	
+
+	private static Expression buildParenthesizedExpression(TokenIterator it, Token current)
+			throws InvalidExpressionException {
+		it.next();
+		Expression expression = buildTerm(it);
+		if (expression == null)
+			throw new InvalidExpressionException(current);
+
+		current = it.current();
+		if (isOf(current, TokenType.RIGHT_PARENTHESIS) == false) {
+			throw new InvalidExpressionException(current != null ? current : it.previous());
+		}
+		
+		it.next();
+		return expression;
+	}
+
 	private static boolean isOf(Token token, TokenType... types) {
-		if (token == null) return false;
+		if (token == null)
+			return false;
 		for (TokenType type : types) {
-			if (token.getType() == type) return true;
+			if (token.getType() == type)
+				return true;
 		}
 		return false;
 	}

@@ -13,6 +13,7 @@ public class Main {
 				var result = expression.evaluate();
 				System.out.format("%s = %s", input, result);
 			}
+			
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
