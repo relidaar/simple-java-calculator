@@ -1,7 +1,7 @@
-package parser;
+package tokenizer;
 
-public final class NumberParser {
-	private NumberParser() {
+public final class NumberTokenizer {
+	private NumberTokenizer() {
 	}
 
 	public static Token parse(Scanner scanner) throws Exception {
@@ -29,7 +29,7 @@ public final class NumberParser {
 			buffer.append(currentSymbol);
 		}
 
-		return new Token(TokenType.NUMBER, buffer.toString());
+		return new Token(TokenType.NUMBER, buffer.toString(), scanner.getCurrentPosition());
 	}
 
 	private static StringBuffer loadDecimalPart(Scanner scanner)

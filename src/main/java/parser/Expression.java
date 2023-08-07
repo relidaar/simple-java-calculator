@@ -1,4 +1,4 @@
-package interpreter;
+package parser;
 
 public interface Expression {
 	public Double evaluate();

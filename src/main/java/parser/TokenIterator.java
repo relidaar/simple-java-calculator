@@ -1,8 +1,8 @@
-package interpreter;
+package parser;
 
 import java.util.List;
 
-import parser.Token;
+import tokenizer.Token;
 
 public class TokenIterator {
 	private final List<Token> mTokens;
@@ -17,15 +17,16 @@ public class TokenIterator {
 	}
 
 	public Token next() {
-		if (hasNext()) {
-			mCurrentPosition += 1;
-		}
-
-		return mTokens.get(mCurrentPosition);
+		mCurrentPosition += 1;
+		return current();
 	}
 
 	public Token current() {
 		return positionIsValid(mCurrentPosition) ? mTokens.get(mCurrentPosition) : null;
+	}
+	
+	public Token previous() {
+		return positionIsValid(mCurrentPosition - 1) ? mTokens.get(mCurrentPosition - 1) : null;
 	}
 
 	private boolean positionIsValid(int pos) {

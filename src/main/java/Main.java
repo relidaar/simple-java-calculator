@@ -1,13 +1,13 @@
-import interpreter.Interpreter;
 import parser.Parser;
+import tokenizer.Tokenizer;
 
 public class Main {
 
 	public static void main(String[] args) {
 		try {
 			String input = "";
-			var tokens = Parser.parse(input);
-			var expression = Interpreter.buildExpression(tokens);
+			var tokens = Tokenizer.parse(input);
+			var expression = Parser.buildExpression(tokens);
 			
 			if (expression != null) {
 				var result = expression.evaluate();

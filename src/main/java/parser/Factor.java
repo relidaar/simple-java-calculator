@@ -1,7 +1,6 @@
-package interpreter;
+package parser;
 
-import parser.Token;
-import parser.TokenType;
+import tokenizer.Token;
 
 public class Factor implements Expression {
 	private Expression mLeft;
@@ -28,21 +27,17 @@ public class Factor implements Expression {
 	public enum FactorType {
 		MULTIPLICATION, DIVISION, MODULO;
 
-		public static FactorType valueOf(Token token) throws Exception {
-			if (token.getType() != TokenType.BINARY_OPERATOR) {
-				throw new Exception("Invalid token type");
-			}
-
-			return switch (token.getValue()) {
-			case "*" -> FactorType.MULTIPLICATION;
-			case "/" -> FactorType.DIVISION;
-			case "%" -> FactorType.MODULO;
+		public static FactorType valueOf(Token token) {
+			return token != null ? switch (token.getType()) {
+			case STAR -> FactorType.MULTIPLICATION;
+			case SLASH -> FactorType.DIVISION;
+			case PERCENT -> FactorType.MODULO;
 			default -> null;
-			};
+			} : null;
 		}
 
-		public static boolean contains(Token token) throws Exception {
-			return token.getType() == TokenType.BINARY_OPERATOR && valueOf(token) != null;
+		public static boolean contains(Token token) {
+			return valueOf(token) != null;
 		}
 	}
 }

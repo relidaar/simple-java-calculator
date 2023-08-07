@@ -1,52 +1,75 @@
 package parser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import tokenizer.Token;
+import tokenizer.TokenType;
 
 public final class Parser {
-
-	private static Set<Character> supportedOperators;
-	private static Set<Character> blankCharacters;
-	
-	private Parser() {}
-
-	static {
-		supportedOperators = new HashSet<>();
-		supportedOperators.add('+');
-		supportedOperators.add('-');
-		supportedOperators.add('*');
-		supportedOperators.add('/');
-		supportedOperators.add('%');
-
-		blankCharacters = new HashSet<>();
-		blankCharacters.add(' ');
-		blankCharacters.add('\t');
-		blankCharacters.add('\n');	
+	private Parser() {
 	}
 
-	public static List<Token> parse(String input) throws Exception {
-		if (input == null || input.isBlank()) {
-			return Collections.emptyList();
+	public static Expression buildExpression(List<Token> tokens) throws Exception {
+		if (tokens == null || tokens.isEmpty())
+			return null;
+
+		var iterator = new TokenIterator(tokens);
+		Expression expression = buildTerm(iterator);
+
+		if (iterator.current() != null || iterator.hasNext())
+			throw new InvalidExpressionException(iterator.current());
+
+		return expression;
+	}
+
+	private static Expression buildTerm(TokenIterator it) throws InvalidExpressionException {
+		Expression expression = buildFactor(it);
+		Token current = it.current();
+		while (Term.TermType.contains(current)) {
+			it.next();
+			Expression next = buildFactor(it);
+			expression = new Term(expression, next, Term.TermType.valueOf(current));
+			current = it.current();
 		}
 
-		List<Token> tokens = new ArrayList<>();
-		var scanner = new Scanner(input);
-		while (scanner.hasNext()) {
-			char currentSymbol = scanner.next();
+		return expression;
+	}
 
-			if (blankCharacters.contains(currentSymbol)) {
-			} else if (Character.isDigit(currentSymbol)) {
-				tokens.add(NumberParser.parse(scanner));
-			} else if (supportedOperators.contains(currentSymbol)) {
-				tokens.add(new Token(TokenType.BINARY_OPERATOR, String.valueOf(currentSymbol)));
-			} else {
-				throw new InvalidInputException(scanner.getCurrentPosition(), currentSymbol);
+	private static Expression buildFactor(TokenIterator it) throws InvalidExpressionException {
+		Expression expression = buildPrimary(it);
+		Token current = it.current();
+		while (Factor.FactorType.contains(current)) {
+			it.next();
+			Expression next = buildPrimary(it);
+			expression = new Factor(expression, next, Factor.FactorType.valueOf(current));
+			current = it.current();
+		}
+
+		return expression;
+	}
+
+	private static Expression buildPrimary(TokenIterator it) throws InvalidExpressionException {
+		Token current = it.current();
+		if (current != null && current.getType() == TokenType.NUMBER) {
+			it.next();
+			return new Number(Double.parseDouble(current.getValue()));
+		}
+
+		if (current != null && current.getType() == TokenType.LEFT_PARENTHESIS) {
+			it.next();
+			Expression expression = buildTerm(it);
+			if (expression == null)
+				throw new InvalidExpressionException(current);
+
+			current = it.current();
+			if (current != null && current.getType() == TokenType.RIGHT_PARENTHESIS) {
+				it.next();
+				return expression;
 			}
+
+			throw new InvalidExpressionException(current != null ? current : it.previous());
 		}
-		
-		return tokens;
+
+		throw new InvalidExpressionException(current != null ? current : it.previous());
 	}
 }

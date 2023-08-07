@@ -1,4 +1,4 @@
-package parser;
+package tokenizer;
 
 public class InvalidInputException extends Exception {
 

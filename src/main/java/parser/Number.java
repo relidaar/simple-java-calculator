@@ -1,4 +1,4 @@
-package interpreter;
+package parser;
 
 public class Number implements Expression {
 	private double mValue;

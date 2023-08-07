@@ -1,7 +1,6 @@
-package interpreter;
+package parser;
 
-import parser.Token;
-import parser.TokenType;
+import tokenizer.Token;
 
 public class Term implements Expression {
 	private Expression mLeft;
@@ -27,20 +26,16 @@ public class Term implements Expression {
 	public enum TermType {
 		ADDITION, SUBTRACTION;
 
-		public static TermType valueOf(Token token) throws Exception {
-			if (token.getType() != TokenType.BINARY_OPERATOR) {
-				throw new Exception("Invalid token type");
-			}
-
-			return switch (token.getValue()) {
-			case "+" -> TermType.ADDITION;
-			case "-" -> TermType.SUBTRACTION;
+		public static TermType valueOf(Token token) {
+			return token != null ? switch (token.getType()) {
+			case PLUS -> TermType.ADDITION;
+			case MINUS -> TermType.SUBTRACTION;
 			default -> null;
-			};
+			} : null;
 		}
 
-		public static boolean contains(Token token) throws Exception {
-			return token.getType() == TokenType.BINARY_OPERATOR && valueOf(token) != null;
+		public static boolean contains(Token token) {
+			return valueOf(token) != null;
 		}
 	}
 }

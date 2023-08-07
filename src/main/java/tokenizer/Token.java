@@ -1,12 +1,14 @@
-package parser;
+package tokenizer;
 
 public class Token {
 	private TokenType mType;
 	private String mValue;
-
-	public Token(TokenType type, String value) {
+	private int mInputPosition;
+	
+	public Token(TokenType type, String value, int inputPosition) {
 		mType = type;
 		mValue = value;
+		mInputPosition = inputPosition;
 	}
 
 	@Override
@@ -20,5 +22,9 @@ public class Token {
 
 	public String getValue() {
 		return mValue;
+	}
+	
+	public int getPosition() {
+		return mInputPosition;
 	}
 }

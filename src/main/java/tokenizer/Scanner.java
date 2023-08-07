@@ -1,4 +1,4 @@
-package parser;
+package tokenizer;
 
 class Scanner {
 	private final String mInput;
