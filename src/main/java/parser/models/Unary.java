@@ -1,5 +1,6 @@
 package parser.models;
 
+import parser.Context;
 import tokenizer.Token;
 import tokenizer.TokenType;
 
@@ -13,8 +14,8 @@ public class Unary implements Expression {
 	}
 
 	@Override
-	public Double evaluate() {
-		var rightResult = mRight.evaluate();
+	public Double evaluate(Context context) throws Exception {
+		var rightResult = mRight.evaluate(context);
 		return switch (mType) {
 		case NEGATIVE -> -rightResult;
 		case POSITIVE -> rightResult;

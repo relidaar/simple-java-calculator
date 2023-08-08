@@ -1,5 +1,7 @@
 package parser.models;
 
+import parser.Context;
+
 public class Number implements Expression {
 	private double mValue;
 	
@@ -8,7 +10,7 @@ public class Number implements Expression {
 	}
 
 	@Override
-	public Double evaluate() {
+	public Double evaluate(Context context) {
 		return mValue;
 	}
 }

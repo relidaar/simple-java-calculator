@@ -2,6 +2,7 @@ package parser.models;
 
 import java.util.List;
 
+import parser.Context;
 import tokenizer.Token;
 import tokenizer.TokenType;
 
@@ -16,13 +17,13 @@ public class Function implements Expression {
 	}
 
 	@Override
-	public Double evaluate() {
+	public Double evaluate(Context context) throws Exception {
 		return switch (mType) {
-		case POW -> Math.pow(mArguments.get(0).evaluate(), mArguments.get(1).evaluate());
-		case LOG -> Math.log10(mArguments.get(0).evaluate());
-		case LN -> Math.log(mArguments.get(0).evaluate());
-		case EXP -> Math.exp(mArguments.get(0).evaluate());
-		case SQRT -> Math.sqrt(mArguments.get(0).evaluate());
+		case POW -> Math.pow(mArguments.get(0).evaluate(context), mArguments.get(1).evaluate(context));
+		case LOG -> Math.log10(mArguments.get(0).evaluate(context));
+		case LN -> Math.log(mArguments.get(0).evaluate(context));
+		case EXP -> Math.exp(mArguments.get(0).evaluate(context));
+		case SQRT -> Math.sqrt(mArguments.get(0).evaluate(context));
 		};
 	}
 
@@ -45,7 +46,11 @@ public class Function implements Expression {
 		
 		public static FunctionType valueOf(Token token) {
 			if (token == null || token.getType() != TokenType.IDENTIFIER) return null;
-			return switch(token.getValue()) {
+			return toFunctionType(token.getValue());
+		}
+		
+		public static FunctionType toFunctionType(String value) {
+			return switch(value) {
 			case "pow" -> POW;
 			case "log" -> LOG;
 			case "ln" -> LN;

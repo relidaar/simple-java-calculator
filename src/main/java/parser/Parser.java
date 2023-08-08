@@ -11,13 +11,13 @@ import parser.models.Number;
 import parser.models.Term;
 import parser.models.Unary;
 import parser.models.Unary.UnaryType;
+import parser.models.Variable;
 import tokenizer.Token;
 import tokenizer.TokenType;
 
 public final class Parser {
-	private Parser() {
-	}
-
+	private Parser() {}
+	
 	public static Expression buildExpression(List<Token> tokens) throws Exception {
 		if (tokens == null || tokens.isEmpty())
 			return null;
@@ -31,7 +31,7 @@ public final class Parser {
 		return expression;
 	}
 	
-	private static Expression buildTerm(TokenIterator it) throws InvalidExpressionException {
+	private static Expression buildTerm(TokenIterator it) throws Exception {
 		Expression expression = buildFactor(it);
 		Token current = it.current();
 		while (Term.TermType.contains(current)) {
@@ -44,7 +44,7 @@ public final class Parser {
 		return expression;
 	}
 
-	private static Expression buildFactor(TokenIterator it) throws InvalidExpressionException {
+	private static Expression buildFactor(TokenIterator it) throws Exception {
 		Expression expression = buildUnary(it);
 		Token current = it.current();
 		while (Factor.FactorType.contains(current)) {
@@ -57,7 +57,7 @@ public final class Parser {
 		return expression;
 	}
 
-	private static Expression buildUnary(TokenIterator it) throws InvalidExpressionException {
+	private static Expression buildUnary(TokenIterator it) throws Exception {
 		Token current = it.current();
 		if (isOf(current, TokenType.MINUS, TokenType.PLUS)) {
 			it.next();
@@ -67,7 +67,7 @@ public final class Parser {
 		return buildPrimary(it);
 	}
 
-	private static Expression buildPrimary(TokenIterator it) throws InvalidExpressionException {
+	private static Expression buildPrimary(TokenIterator it) throws Exception {
 		Token current = it.current();
 		if (isOf(current, TokenType.NUMBER)) {
 			it.next();
@@ -81,13 +81,21 @@ public final class Parser {
 		if (Function.FunctionType.contains(current)) {
 			return buildFunction(it, current);
 		}
+		
+		if (isOf(current, TokenType.IDENTIFIER)) {
+			it.next();
+			return new Variable(current.getValue());
+		}
 
 		throw new InvalidExpressionException(current != null ? current : it.previous());
 	}
 
 	// Helper Functions Section
-	private static Expression buildFunction(TokenIterator it, Token current) throws InvalidExpressionException {
+	private static Expression buildFunction(TokenIterator it, Token current) throws Exception {
 		FunctionType functionType = FunctionType.valueOf(current);
+		if (functionType == null) {
+			throw new UndefinedIdentifier(current);
+		}
 				
 		current = it.next();
 		if (isOf(current, TokenType.LEFT_PARENTHESIS) == false) {
@@ -125,7 +133,7 @@ public final class Parser {
 	}
 
 	private static Expression buildParenthesizedExpression(TokenIterator it, Token current)
-			throws InvalidExpressionException {
+			throws Exception {
 		it.next();
 		Expression expression = buildTerm(it);
 		if (expression == null)

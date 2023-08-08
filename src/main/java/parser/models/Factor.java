@@ -1,5 +1,6 @@
 package parser.models;
 
+import parser.Context;
 import tokenizer.Token;
 
 public class Factor implements Expression {
@@ -14,9 +15,9 @@ public class Factor implements Expression {
 	}
 
 	@Override
-	public Double evaluate() {
-		var leftResult = mLeft.evaluate();
-		var rightResult = mRight.evaluate();
+	public Double evaluate(Context context) throws Exception {
+		var leftResult = mLeft.evaluate(context);
+		var rightResult = mRight.evaluate(context);
 		return switch (mType) {
 		case DIVISION -> leftResult / rightResult;
 		case MULTIPLICATION -> leftResult * rightResult;
