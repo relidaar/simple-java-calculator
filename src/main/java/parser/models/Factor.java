@@ -22,17 +22,19 @@ public class Factor implements Expression {
 		case DIVISION -> leftResult / rightResult;
 		case MULTIPLICATION -> leftResult * rightResult;
 		case MODULO -> leftResult % rightResult;
+		case POWER -> Math.pow(leftResult, rightResult);
 		};
 	}
 
 	public enum FactorType {
-		MULTIPLICATION, DIVISION, MODULO;
+		MULTIPLICATION, DIVISION, MODULO, POWER;
 
 		public static FactorType valueOf(Token token) {
 			return token != null ? switch (token.getType()) {
 			case STAR -> FactorType.MULTIPLICATION;
 			case SLASH -> FactorType.DIVISION;
 			case PERCENT -> FactorType.MODULO;
+			case CARET -> FactorType.POWER;
 			default -> null;
 			} : null;
 		}

@@ -19,7 +19,6 @@ public class Function implements Expression {
 	@Override
 	public Double evaluate(Context context) throws Exception {
 		return switch (mType) {
-		case POW -> Math.pow(mArguments.get(0).evaluate(context), mArguments.get(1).evaluate(context));
 		case LOG -> Math.log10(mArguments.get(0).evaluate(context));
 		case LN -> Math.log(mArguments.get(0).evaluate(context));
 		case EXP -> Math.exp(mArguments.get(0).evaluate(context));
@@ -28,7 +27,7 @@ public class Function implements Expression {
 	}
 
 	public enum FunctionType {
-		POW(2), LOG, LN, EXP, SQRT;
+		LOG, LN, EXP, SQRT;
 
 		private int mParametersCount;
 
@@ -51,7 +50,6 @@ public class Function implements Expression {
 		
 		public static FunctionType toFunctionType(String value) {
 			return switch(value) {
-			case "pow" -> POW;
 			case "log" -> LOG;
 			case "ln" -> LN;
 			case "exp" -> EXP;
