@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView fx:id="variablesDictionary" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="variableNameColumn" editable="false" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="variableValueColumn" prefWidth="75.0" text="Value" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </center>
+   <bottom>
+      <BorderPane prefWidth="300.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <center>
+            <BorderPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="5.0" right="5.0" />
+               </BorderPane.margin>
+               <top>
+                  <TextField fx:id="variableNameField" promptText="Variable Name" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </top>
+               <bottom>
+                  <TextField fx:id="variableValueField" promptText="Variable Value" BorderPane.alignment="CENTER" />
+               </bottom>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </BorderPane>
+         </center>
+         <right>
+            <Button fx:id="addItemButton" mnemonicParsing="false" onAction="#addItem" prefHeight="30.0" prefWidth="70.0" text="Add" BorderPane.alignment="CENTER" />
+         </right>
+         <bottom>
+            <Label fx:id="messageLabel" textFill="#c02d2d" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </bottom>
+      </BorderPane>
+   </bottom>
+   <top>
+      <Button fx:id="clearDictionaryButton" mnemonicParsing="false" onAction="#clearDictionary" prefHeight="30.0" prefWidth="70.0" text="Clear" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </Button>
+   </top>
+</BorderPane>
