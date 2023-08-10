@@ -1,16 +1,11 @@
 package parser;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import parser.models.Function.FunctionType;
 
 public class Context {
-	private Map<String, Double> mCache;
-	
-	public Context() {
-		mCache = new HashMap<>();
-	}
+	private Map<String, Double> mCache = new HashMap<>();
 	
 	public void add(String key, Double value) throws Exception {
 		if (FunctionType.toFunctionType(key) != null) 
@@ -27,6 +22,15 @@ public class Context {
 	
 	public Double get(String key) {
 		return mCache.get(key);
+	}
+	
+	public void delete(String key) {
+		if (!containsKey(key)) return;
+		mCache.remove(key);
+	}
+	
+	public void clear() {
+		mCache.clear();
 	}
 	
 	@Override

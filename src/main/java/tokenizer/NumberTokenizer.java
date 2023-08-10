@@ -58,10 +58,13 @@ public final class NumberTokenizer {
 	private static StringBuffer loadExponent(Scanner scanner) throws Exception {
 		StringBuffer result = new StringBuffer();
 		result.append(scanner.getCurrentElement());
-		
-		if (!Character.isDigit(scanner.peekNext()))
+		if (!scanner.hasNext()) {
+			throw new Exception("Exponent must be definied");
+		}
+		char next = scanner.peekNext();
+		if (!Character.isDigit(next) && next != '-' && next != '+')
 			throw new Exception("Exponent must be definied with a number");
-		
+		result.append(scanner.next());
 		while (scanner.hasNext()) {
 			char currentSymbol = scanner.peekNext();
 			if (!Character.isDigit(currentSymbol))
